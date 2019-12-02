@@ -29,7 +29,6 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Configuration
 public class PluginConfig implements BeanFactoryAware {
 
-
     private final SpringPluginManager pluginManager;
     private final ApplicationContext applicationContext;
     private final ObjectMapper objectMapper;
@@ -57,22 +56,18 @@ public class PluginConfig implements BeanFactoryAware {
     private RouterFunction<?> getReactiveRoutes(PluginManager pm) {
         RouterFunction<?> base = baseRoot(pm);
         RouterFunction<?> routes = pm.getExtensions(PluginInterface.class).stream()
-                .flatMap(g -> g.reactiveRoutes().stream())
-                .map(r-> (RouterFunction<ServerResponse>)r)
-                .reduce((o,r )-> (RouterFunction<ServerResponse>) o.andOther(r))
-                .orElse(null);
+                .flatMap(g -> g.reactiveRoutes().stream()).map(r -> (RouterFunction<ServerResponse>) r)
+                .reduce((o, r) -> (RouterFunction<ServerResponse>) o.andOther(r)).orElse(null);
         return routes == null ? base : base.andOther(routes);
     }
 
     private RouterFunction<?> baseRoot(PluginManager pm) {
-        return route(GET("/plugins"),
-                req -> ServerResponse.ok().body(Mono.just(pluginNamesMono(pm)), String.class));
+        return route(GET("/plugins"), req -> ServerResponse.ok().body(Mono.just(pluginNamesMono(pm)), String.class));
     }
 
     private String pluginNamesMono(PluginManager pm) {
         List<String> identityList = pm.getExtensions(PluginInterface.class).stream()
-                .map(g-> g.getClass().getName() + ": " + g.identify())
-                .collect(Collectors.toList());
+                .map(g -> g.getClass().getName() + ": " + g.identify()).collect(Collectors.toList());
         try {
             return objectMapper.writeValueAsString(identityList);
         } catch (JsonProcessingException e) {
@@ -80,17 +75,11 @@ public class PluginConfig implements BeanFactoryAware {
         }
     }
 
-
     private void registerMvcEndpoints(PluginManager pm) {
-        pm.getExtensions(PluginInterface.class).stream()
-                .flatMap(g -> g.mvcControllers().stream())
-                .forEach(r -> ((ConfigurableBeanFactory) beanFactory)
-                        .registerSingleton(r.getClass().getName(), r));
-        applicationContext
-                .getBeansOfType(RequestMappingHandlerMapping.class)
-                .forEach((k, v) -> v.afterPropertiesSet());
+        pm.getExtensions(PluginInterface.class).stream().flatMap(g -> g.mvcControllers().stream())
+                .forEach(r -> ((ConfigurableBeanFactory) beanFactory).registerSingleton(r.getClass().getName(), r));
+        applicationContext.getBeansOfType(RequestMappingHandlerMapping.class).forEach((k, v) -> v.afterPropertiesSet());
     }
-
 
     @PreDestroy
     public void cleanup() {
