@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven 3.6.3
+Built-By: Bratic
+Build-Jdk: 11.0.2-redhat
+Implementation-Title: spring-test-plugin
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.curisprofound
+Plugin-Class: com.curisprofound.springtestplugin.SpringSamplePlugin
+Plugin-Dependencies: 
+Plugin-Id: spring-hello-plugin
+Plugin-Provider: Curis Profound
+Plugin-Version: 0.0.1
+

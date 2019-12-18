@@ -1,6 +1,9 @@
 package com.curisprofound.springtestplugin;
 
 import com.curisprofound.plugins.PluginInterface;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.pf4j.Extension;
 import org.pf4j.PluginWrapper;
 import org.pf4j.spring.SpringPlugin;
@@ -13,7 +16,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
@@ -29,7 +32,10 @@ public class SpringSamplePlugin extends SpringPlugin {
 
     @Override
     public void start() {
+        ObjectMapper om = new ObjectMapper();
+        Version version = om.version();
         log.info("Spring Sample plugin.start()");
+        log.info("Jackson version: {}", version);
     }
 
     @Override
@@ -47,14 +53,11 @@ public class SpringSamplePlugin extends SpringPlugin {
         return applicationContext;
     }
 
-
     @Extension(ordinal = 1)
     public static class SpringPlugin implements PluginInterface {
 
         @Autowired
         private GreetProvider greetProvider;
-
-
 
         @Override
         public String identify() {
@@ -63,21 +66,13 @@ public class SpringSamplePlugin extends SpringPlugin {
 
         @Override
         public List<Object> mvcControllers() {
-            return new ArrayList<Object>() {{
-                add(new PluginController());
-            }};
+            return Arrays.asList(new PluginController());
         }
 
         @Override
         public List<RouterFunction<?>> reactiveRoutes() {
-            return new ArrayList<RouterFunction<?>>() {{
-                add(route(GET("/plugin-end-point"),
-                        req -> ServerResponse.ok().body(Mono.just("reactive router endpoint"), String.class)));
-            }};
+            return Arrays.asList(route(GET("/plugin-end-point"),
+                    req -> ServerResponse.ok().body(Mono.just("reactive router endpoint"), String.class)));
         }
-
-
     }
-
-
 }

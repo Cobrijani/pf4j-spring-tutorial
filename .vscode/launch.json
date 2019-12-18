@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - SpringTestPluginApplication",
+            "request": "launch",
+            "mainClass": "com.curisprofound.springtestplugin.SpringTestPluginApplication",
+            "projectName": "spring-test-plugin"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-SpringPluginContainerApplication<spring-plugin-container>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.curisprofound.springplugincontainer.SpringPluginContainerApplication",
+            "projectName": "spring-plugin-container",
+            "args": ""
+        }
+    ]
+}

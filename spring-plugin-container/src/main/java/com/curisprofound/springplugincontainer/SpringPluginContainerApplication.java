@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,13 @@ public class SpringPluginContainerApplication {
                 log.info(String.format("Number of plugins found: %d", plugins.size()));
                 plugins.forEach(c -> log.info(c.getClass().getName() + ":" + c.identify()));
             }
+        };
+    }
+
+    @Bean
+    public CommandLineRunner runner() {
+        return (args) -> {
+            log.info("Plugin installation folder path: {}", System.getProperty("pf4j.pluginsDir"));
         };
     }
 }
